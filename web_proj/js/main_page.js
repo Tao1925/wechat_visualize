@@ -34,7 +34,7 @@ function createLineChart() {
             data: [65, 59, 80, 81, 56, 55, 40], // 每个月的数据
             fill: false,
             borderColor: 'rgba(75, 192, 192, 1)',
-            tension: 0.1
+            tension: 0.2
         }]
     };
 

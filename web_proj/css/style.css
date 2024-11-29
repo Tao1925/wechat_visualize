@@ -7,7 +7,7 @@
 
 body, html {
     height: 100%;
-    overflow: scroll;  /* 禁止页面默认滚动条，使用自定义滚动 */
+    overflow: scroll;
 }
 
 /* 每个部分的高度设置为 100vh */
@@ -45,4 +45,9 @@ canvas {
     height: auto;
     margin: 20px auto;
     display: block;
+}
+
+#lineChart {
+    width:80vw;
+    height:80vh;
 }
