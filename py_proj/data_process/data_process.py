@@ -1,9 +1,13 @@
 import csv
+import jieba
+from collections import Counter
 
+TYPE_INDEX = 2
 MSG_INDEX = 7
 DATE_INDEX = 8
 MONTH_STRING_SIZE = 7
 DAY_STRING_SIZE = 10
+
 
 def count_chat_monthly(reader):
     month_dict = {}
@@ -16,7 +20,7 @@ def count_chat_monthly(reader):
         else:
             month_dict[month_date] += 1
 
-    f = open("../../output/count_chat_monthly.csv", mode='w', encoding='utf-8')
+    f = open("../../output/count_chat_monthly.txt", mode='w', encoding='utf-8')
     for key, value in month_dict.items():
         f.write(key + ' ' + str(value) + '\n')
 
@@ -32,9 +36,34 @@ def count_chat_daily(reader):
         else:
             day_dict[day_date] += 1
 
-    f = open("../../output/count_chat_daily.csv", mode='w', encoding='utf-8')
+    f = open("../../output/count_chat_daily.txt", mode='w', encoding='utf-8')
     for key, value in day_dict.items():
         f.write(key + ' ' + str(value) + '\n')
+
+
+def count_word_frequency(reader):
+    text_list = []
+    for row in reader:
+        msg_type = row[TYPE_INDEX]
+        if msg_type != '1':
+            continue
+        text = row[MSG_INDEX]
+        text_list.append(text)
+    text_string = " ".join(text_list)
+    words = jieba.cut(text_string)
+
+    word_list = list(words)
+
+    # 统计词频
+    word_counts = Counter(word_list)
+    sorted_word_counts = dict(sorted(word_counts.items(), key=lambda item: item[1],reverse=True))
+    # 输出词频
+    f = open("../../output/count_word_frequency.txt", mode='w', encoding='utf-8')
+
+    for word, count in sorted_word_counts.items():
+        if len(word) <= 1: continue
+        if len(word) != 3 and word[0] == word[1]: continue
+        f.write(f"{word} {count}\n")
 
 
 def read_csv():
@@ -42,7 +71,8 @@ def read_csv():
     reader = csv.reader(f)
 
     # count_chat_monthly(reader)
-    count_chat_daily(reader)
+    # count_chat_daily(reader)
+    count_word_frequency(reader)
 
 
 if __name__ == '__main__':

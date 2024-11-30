@@ -11,7 +11,7 @@ body, html {
 }
 
 /* 每个部分的高度设置为 100vh */
-#page1, #page2, #page3 {
+div[id^="page"] {
     width: 100%;
     height: 100vh; /* 每个部分占满一个屏幕的高度 */
     display: flex;
@@ -35,19 +35,32 @@ body, html {
     color: white;
 }
 
+#page4 {
+    background-color: #9a6e3a;
+}
+
+#page5 {
+    background-color: red;
+}
+
+#page6 {
+    background-color: yellow;
+}
 /* 平滑滚动效果 */
 html {
     scroll-behavior: smooth;
 }
 
-canvas {
-    max-width: 100%;
-    height: auto;
-    margin: 20px auto;
-    display: block;
+#month_chart {
+    width:100vw;
+    height:80vh;
 }
 
-#lineChart {
-    width:80vw;
+#day_chart {
+    width:100vw;
+    height:80vh;
+}
+#wordcloud_chart{
+    width:100vw;
     height:80vh;
 }
