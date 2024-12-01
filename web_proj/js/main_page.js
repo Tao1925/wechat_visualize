@@ -22,13 +22,25 @@ function loadContent(targetId, file) {
             if (targetId === "page6"){
                 create_hour_chart();
             }
+            if (targetId === "page7"){
+                create_china_chart();
+            }
         })
         .catch(err => console.error(err));
 }
 
+function timeToDecimal(timeStr) {
+    // 分割输入的时间字符串
+    const [hours, minutes] = timeStr.split(":").map(Number);
+
+    // 将分钟转换为小时，并返回总的小时数
+    return hours + minutes / 60;
+}
+
+
 // 加载内容
 document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 1; i <= 9; i++) {
         loadContent('page' + i, 'html/page' + i + '.html');
     }
 });
@@ -311,197 +323,49 @@ async function create_calls_chart(){
         const content = await response.text();
         const lines = content.split('\n');
 
-        const audio_call = [];
-        const audio_time = [];
-        const video_call = [];
-        const video_time = [];
+        const audio_data = [];
+        const video_data = [];
 
         lines.forEach(line => {
                             const parts = line.split(' ');
-                            if (parts.length === 3){
-                                if (parts[1] === "audio") {
-                                    audio_time.push(parts[0]);
-                                    audio_call.push(parseInt(parts[2]));
-                                }else if (parts[1] === "video") {
-                                    video_time.push(parts[0]);
-                                    video_call.push(parseInt(parts[2]));
+                            if (parts.length === 4){
+                                if (parts[2] === "audio") {
+                                    audio_data.push([parts[0], timeToDecimal(parts[1]), parseInt(parts[3])]);
+                                }else if (parts[2] === "video") {
+                                    video_data.push([parts[0], timeToDecimal(parts[1]), parseInt(parts[3])]);
                                 }
                             }
                         })
 
         var chart = echarts.init(document.getElementById('calls_chart'));
+        console.log(audio_data)
 
-        const dataBJ = [
-            [1, 55, 9, 56, 0.46, 18, 6, '良'],
-            [2, 25, 11, 21, 0.65, 34, 9, '优'],
-            [31, 46, 5, 49, 0.28, 10, 6, '优']
-        ];
-        const dataGZ = [
-            [1, 26, 37, 27, 1.163, 27, 13, '优'],
-            [2, 85, 62, 71, 1.195, 60, 8, '良'],
-            [3, 78, 38, 74, 1.363, 37, 7, '良'],
-            [4, 21, 21, 36, 0.634, 40, 9, '优'],
-            [5, 41, 42, 46, 0.915, 81, 13, '优'],
-            [29, 82, 92, 174, 3.29, 0, 13, '良'],
-            [30, 106, 116, 188, 3.628, 101, 16, '轻度污染'],
-            [31, 118, 50, 0, 1.383, 76, 11, '轻度污染']
-        ];
-        const dataSH = [
-            [1, 91, 45, 125, 0.82, 34, 23, '良'],
-            [2, 65, 27, 78, 0.86, 45, 29, '良'],
-            [3, 83, 60, 84, 1.09, 73, 27, '良'],
-            [4, 109, 81, 121, 1.28, 68, 51, '轻度污染'],
-            [5, 106, 77, 114, 1.07, 55, 51, '轻度污染'],
-            [29, 188, 143, 197, 1.66, 99, 51, '中度污染'],
-            [30, 174, 131, 174, 1.55, 108, 50, '中度污染'],
-            [31, 187, 143, 201, 1.39, 89, 53, '中度污染']
-        ];
-        const schema = [
-            { name: 'date', index: 0, text: '日' },
-            { name: 'AQIindex', index: 1, text: 'AQI指数' },
-            { name: 'PM25', index: 2, text: 'PM2.5' },
-            { name: 'PM10', index: 3, text: 'PM10' },
-            { name: 'CO', index: 4, text: '一氧化碳（CO）' },
-            { name: 'NO2', index: 5, text: '二氧化氮（NO2）' },
-            { name: 'SO2', index: 6, text: '二氧化硫（SO2）' }
-        ];
-        const itemStyle = {
-            opacity: 0.8,
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowOffsetY: 0,
-            shadowColor: 'rgba(0,0,0,0.3)'
-        };
         var option = {
-            color: ['#dd4444', '#fec42c', '#80F1BE'],
+            color: ['#dd4444','#80F1BE'],
             legend: {
                 top: 10,
-                data: ['北京', '上海', '广州'],
+                data: ['语音', '视频'],
                 textStyle: {
                     fontSize: 16
                 }
             },
-            grid: {
-                left: '10%',
-                right: 150,
-                top: '18%',
-                bottom: '10%'
-            },
-            tooltip: {
-                backgroundColor: 'rgba(255,255,255,0.7)',
-                formatter: function (param) {
-                    var value = param.value;
-                    // prettier-ignore
-                    return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
-                        + param.seriesName + ' ' + value[0] + '日：'
-                        + value[7]
-                        + '</div>'
-                        + schema[1].text + '：' + value[1] + '<br>'
-                        + schema[2].text + '：' + value[2] + '<br>'
-                        + schema[3].text + '：' + value[3] + '<br>'
-                        + schema[4].text + '：' + value[4] + '<br>'
-                        + schema[5].text + '：' + value[5] + '<br>'
-                        + schema[6].text + '：' + value[6] + '<br>';
-                }
-            },
             xAxis: {
-                type: 'value',
-                name: '日期',
-                nameGap: 16,
-                nameTextStyle: {
-                    fontSize: 16
-                },
-                max: 31,
-                splitLine: {
-                    show: false
-                }
+                type: 'time'
             },
             yAxis: {
-                type: 'value',
-                name: 'AQI指数',
-                nameLocation: 'end',
-                nameGap: 20,
-                nameTextStyle: {
-                    fontSize: 16
-                },
-                splitLine: {
-                    show: false
-                }
+                type: 'value'
             },
-            visualMap: [
-                {
-                    left: 'right',
-                    top: '10%',
-                    dimension: 2,
-                    min: 0,
-                    max: 250,
-                    itemWidth: 30,
-                    itemHeight: 120,
-                    calculable: true,
-                    precision: 0.1,
-                    text: ['圆形大小：PM2.5'],
-                    textGap: 30,
-                    inRange: {
-                        symbolSize: [10, 70]
-                    },
-                    outOfRange: {
-                        symbolSize: [10, 70],
-                        color: ['rgba(255,255,255,0.4)']
-                    },
-                    controller: {
-                        inRange: {
-                            color: ['#c23531']
-                        },
-                        outOfRange: {
-                            color: ['#999']
-                        }
-                    }
-                },
-                {
-                    left: 'right',
-                    bottom: '5%',
-                    dimension: 6,
-                    min: 0,
-                    max: 50,
-                    itemHeight: 120,
-                    text: ['明暗：二氧化硫'],
-                    textGap: 30,
-                    inRange: {
-                        colorLightness: [0.9, 0.5]
-                    },
-                    outOfRange: {
-                        color: ['rgba(255,255,255,0.4)']
-                    },
-                    controller: {
-                        inRange: {
-                            color: ['#c23531']
-                        },
-                        outOfRange: {
-                            color: ['#999']
-                        }
-                    }
-                }
-            ],
             series: [
                 {
                     name: '北京',
                     type: 'scatter',
-                    itemStyle: itemStyle,
-                    data: dataBJ
-                },
-                {
-                    name: '上海',
-                    type: 'scatter',
-                    itemStyle: itemStyle,
-                    data: dataSH
-                },
-                {
-                    name: '广州',
-                    type: 'scatter',
-                    itemStyle: itemStyle,
-                    data: dataGZ
+                    data: audio_data,
+                    symbolSize: function (data){
+                        return data[2];
+                    }
                 }
-            ]
+            ],
+
         };
         chart.setOption(option);
 
@@ -595,4 +459,93 @@ async function create_hour_chart(){
     } catch (error){
         console.error('读取文件失败:', error);
     }
+}
+
+
+async function create_china_chart(){
+    var chart = echarts.init(document.getElementById("china_chart"));
+
+    $.getJSON("/output/china_province.json", function (data) {
+        // 注册地图
+        echarts.registerMap("china", data);
+        // 配置option
+        const option = {
+            // 地理坐标系组件用于地图的绘制
+            geo: {
+                // 使用 registerMap 注册的地图名称。
+                map: "china",
+                // 是否开启鼠标缩放和平移漫游。默认不开启。如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move'。设置成 true 为都开启
+                roam: true,
+                zoom: 1.5,
+                top: '25%',
+                // 图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。
+                label: {
+                    show: false,
+                    color: "#666666",
+                },
+                // 地图区域的多边形 图形样式。
+                /*
+                itemStyle: {
+                    // 地图区域的颜色
+                    areaColor: "#71d5a1", // 绿色
+                    // 图形的描边颜色
+                    borderColor: "#2979ff", // 蓝色
+                },*/
+                // 设置高亮状态下的多边形和标签样式
+                emphasis: {
+                    // 设置区域样式
+                    itemStyle: {
+                        areaColor: "#ffff99", // 黄色
+                        borderColor: "#f29100", // 描边颜色黄色
+                    },
+                    // 设置字体
+                    label: {
+                        fontSize: 16, // 16px
+                        color: "#f29100", // 白色
+                    },
+                },
+            },
+            visualMap: {
+                type: 'piecewise',
+                pieces: [
+                    { min: 0, max: 10, color: '#e0ffff' },   // 10 及以下的值，颜色为浅蓝色
+                    { min: 10.1, max: 20, color: '#006edd' }, // 10 到 20 的值，颜色为深蓝色
+                    { min: 20.1, max: 30, color: '#ff0000' }, // 20 到 30 的值，颜色为红色
+                    { min: 30.1, max: 40, color: '#ff7f00' }, // 30 到 40 的值，颜色为橙色
+                    { min: 40.1, max: 50, color: '#ffff00' }, // 40 到 50 的值，颜色为黄色
+                ],
+                text: ['高', '低'], // 映射显示的文字
+                calculable: true,
+            },
+            series: [
+                {
+                    type: "map",
+                    map: "china",
+                    geoIndex: 0,
+                    roam: true,
+                    data: [
+                        { name: "北京市", value:5 },  // 北京省份设置为红色
+                        { name: "上海市", value:15 },  // 上海省份设置为绿色
+                        { name: "广东省", value:25 },  // 广东省份设置为蓝色
+                        // 其他省份使用默认颜色（如果不设置）
+                    ]
+                },
+                {
+                    type: "scatter",
+                    coordinateSystem: "geo",
+                    symbolSize: "20",
+                    itemStyle: {
+                        color: "#fa3534",
+                    },
+                    data: [
+                        { name: "北京", value: [116.4074, 39.9042] },
+                        { name: "上海", value: [121.4737, 31.2304] },
+                        { name: "广州", value: [113.2644, 23.1292] },
+                        // 更多数据...
+                    ],
+                },
+            ],
+        };
+        chart.setOption(option, true);
+    });
 }

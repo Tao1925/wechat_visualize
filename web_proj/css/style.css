@@ -36,7 +36,7 @@ div[id^="page"] {
 }
 
 #page4 {
-    background-color: #9a6e3a;
+    background-color: white;
 }
 
 #page5 {
@@ -45,6 +45,15 @@ div[id^="page"] {
 
 #page6 {
     background-color: yellow;
+}
+#page7 {
+    background-color: brown;
+}
+#page8 {
+    background-color: blue;
+}
+#page9 {
+    background-color: violet;
 }
 /* 平滑滚动效果 */
 html {
@@ -69,6 +78,14 @@ html {
     height:80vh;
 }
 #hour_chart{
+    width:100vw;
+    height:80vh;
+}
+#china_chart{
+    width:100vw;
+    height:80vh;
+}
+#nj_chart{
     width:100vw;
     height:80vh;
 }
