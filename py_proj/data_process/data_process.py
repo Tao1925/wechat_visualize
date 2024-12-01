@@ -1,10 +1,11 @@
 import csv
-import jieba
+# import jieba
 from collections import Counter
 
 TYPE_INDEX = 2
 MSG_INDEX = 7
 DATE_INDEX = 8
+NAME_INDEX = 10
 MONTH_STRING_SIZE = 7
 DAY_STRING_SIZE = 10
 
@@ -41,6 +42,27 @@ def count_chat_daily(reader):
         f.write(key + ' ' + str(value) + '\n')
 
 
+def count_chat_hourly(reader):
+    hour_dicts = [{}, {}]
+
+    for row in reader:
+        date = row[DATE_INDEX]
+        name = row[NAME_INDEX]
+        colon_index = date.find(':')
+        hour = date[DAY_STRING_SIZE + 1: colon_index]
+        hour_dict_index = 0
+        if name[0] == 'T': hour_dict_index += 1
+        hdi = hour_dict_index
+        if hour not in hour_dicts[hdi].keys():
+            hour_dicts[hdi][hour] = 1
+        else:
+            hour_dicts[hdi][hour] += 1
+
+    f = open("../../output/count_chat_hourly.txt", mode='w', encoding='utf-8')
+    for i in range(len(hour_dicts)):
+        for key, value in hour_dicts[i].items():
+            f.write(["SXY", "TSY"][i] + ' ' + key + ' ' + str(value) + '\n')
+
 def count_word_frequency(reader):
     text_list = []
     for row in reader:
@@ -72,7 +94,8 @@ def read_csv():
 
     # count_chat_monthly(reader)
     # count_chat_daily(reader)
-    count_word_frequency(reader)
+    count_chat_hourly(reader)
+    # count_word_frequency(reader)
 
 
 if __name__ == '__main__':

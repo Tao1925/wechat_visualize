@@ -9,7 +9,7 @@ __pycache__/
 # TAO FILE
 MemoTrace/
 data/
-
+web_proj/tmp/
 # Distribution / packaging
 .Python
 build/
