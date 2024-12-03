@@ -25,6 +25,9 @@ function loadContent(targetId, file) {
             if (targetId === "page7"){
                 create_china_chart();
             }
+            if (targetId === "page8"){
+                create_nj_chart();
+            }
         })
         .catch(err => console.error(err));
 }
@@ -548,4 +551,20 @@ async function create_china_chart(){
         };
         chart.setOption(option, true);
     });
+}
+
+async function create_nj_chart(){
+    window._AMapSecurityConfig = {
+        securityJsCode: "bdf632a55278fa6e8480dc7917083027",
+    };
+    AMapLoader.load({
+        key: "2105cea408b19738068689ff54a09fdd", //申请好的Web端开发者 Key，调用 load 时必填
+        version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
+    })
+        .then((AMap) => {
+            const map = new AMap.Map("nj-chart");
+        })
+        .catch((e) => {
+            console.error(e); //加载错误提示
+        });
 }

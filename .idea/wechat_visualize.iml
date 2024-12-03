@@ -10,7 +10,8 @@
     <orderEntry type="library" name="chart.js" level="application" />
     <orderEntry type="library" name="echarts" level="application" />
     <orderEntry type="library" name="echarts" level="application" />
-    <orderEntry type="library" name="axios" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="loader" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
   </component>
   <component name="PyDocumentationSettings">
