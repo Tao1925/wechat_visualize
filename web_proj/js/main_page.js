@@ -554,6 +554,7 @@ async function create_china_chart(){
 }
 
 async function create_nj_chart(){
+    /*
     window._AMapSecurityConfig = {
         securityJsCode: "bdf632a55278fa6e8480dc7917083027",
     };
@@ -566,5 +567,46 @@ async function create_nj_chart(){
         })
         .catch((e) => {
             console.error(e); //加载错误提示
+        }); */
+
+    try {
+        var map = new AMap.Map("container", {
+            zoom: 13,
+            center: [118.796709, 32.060362],
+            resizeEnable: true
         });
+
+        const response = await fetch("/output/map_points.txt");
+        const content = await response.text();
+        const lines = content.split('\n');
+
+        const map_points_info = []
+
+        lines.forEach(line => {
+            const words = line.split(' ');
+            const location_name = words[0];
+            const cords = words[1].split(',');
+            const x = parseFloat(cords[0]);
+            const y = parseFloat(cords[1]);
+            map_points_info.push({
+                location_name: location_name,
+                x: x,
+                y: y
+            })
+        })
+        console.log(map_points_info)
+        for (var i = 0; i < map_points_info.length; i++){
+            var marker = new AMap.Marker({
+                map: map,
+                icon: "/web_proj/res/poi-marker-default.png",
+                position: [map_points_info[i].x, map_points_info[i].y],
+                offset: new AMap.Pixel(-13, -30)
+            });
+        }
+
+    } catch (error){
+        console.log(error)
+    }
+
+
 }
