@@ -40,6 +40,11 @@ function timeToDecimal(timeStr) {
     return hours + minutes / 60;
 }
 
+async function show_photos(page_id, marker_name) {
+
+}
+
+
 
 // 加载内容
 document.addEventListener('DOMContentLoaded', () => {
@@ -595,18 +600,29 @@ async function create_nj_chart(){
             })
         })
         console.log(map_points_info)
+
+        var onMarkerClick = function (e) {
+            var marker_location_name = e.target._originOpts.location_name;
+
+
+            // e.target 就是被点击的 Marker
+        }
+
         for (var i = 0; i < map_points_info.length; i++){
             var marker = new AMap.Marker({
                 map: map,
                 icon: "/web_proj/res/poi-marker-default.png",
                 position: [map_points_info[i].x, map_points_info[i].y],
-                offset: new AMap.Pixel(-13, -30)
+                offset: new AMap.Pixel(-13, -30),
+                location_name: map_points_info[i].location_name,
             });
+            marker.on('click', onMarkerClick);
         }
+
+
+
 
     } catch (error){
         console.log(error)
     }
-
-
 }
