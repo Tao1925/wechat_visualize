@@ -41,6 +41,131 @@ function timeToDecimal(timeStr) {
 }
 
 async function show_photos(page_id, marker_name) {
+    var target_page = document.getElementById("container");
+
+    var photo_container = document.createElement('div');
+    photo_container.id = "photo_container";
+    photo_container.style.position = "relative";
+    photo_container.style.width = "100%";
+    photo_container.style.height = "100%";
+    target_page.appendChild(photo_container)
+
+    const image_urls =  []
+    for (var i = 1; i <= 3; i++){
+        image_urls.push('/output/photo/nj/' + marker_name + '/' + i + '.jpg');
+    }
+
+    const img_elements = [];
+
+    image_urls.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        // img.onload = function(){
+        //     // 获取屏幕的宽高
+        //     const screenWidth = window.innerWidth;
+        //     const screenHeight = window.innerHeight;
+        //
+        //     // 计算目标面积 (屏幕面积的1/8)
+        //     const targetArea = (screenWidth * screenHeight) / 8;
+        //
+        //     // 图片的原始宽高
+        //     const originalWidth = img.naturalWidth;
+        //     const originalHeight = img.naturalHeight;
+        //
+        //     // 计算图片的长宽比
+        //     const aspectRatio = originalWidth / originalHeight;
+        //
+        //     // 计算目标宽高，使图片面积接近 targetArea 且保持长宽比
+        //     const targetWidth = Math.sqrt(targetArea * aspectRatio);
+        //     const targetHeight = targetWidth / aspectRatio;
+        //
+        //     // 设置图片的宽高
+        //     img.style.width = `${targetWidth}px`;
+        //     img.style.height = `${targetHeight}px`;
+        //     img.style.position = "relative";
+        //     img.style.zIndex = 9999;
+        // }
+        photo_container.appendChild(img);
+        img_elements.push(img);
+
+    })
+    console.log(img_elements)
+
+    const vertical_imgs = [];
+    const horizontal_imgs = [];
+
+    for (var i = 0; i < 3; i++){
+        if (img_elements[i].naturalHeight > img_elements[i].naturalWidth){
+            vertical_imgs.push(img_elements[i]);
+        }else{
+            horizontal_imgs.push(img_elements[i]);
+        }
+    }
+    console.log("horizontal_imgs.length = " + horizontal_imgs.length)
+    if (horizontal_imgs.length === 3) {
+
+        horizontal_imgs.forEach((img, idx) => {
+            img.onload = function () {
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+
+                // 计算目标面积 (屏幕面积的1/8)
+                const targetArea = (screenWidth * screenHeight) / 8;
+
+                // 图片的原始宽高
+                const originalWidth = this.naturalWidth;
+                const originalHeight = this.naturalHeight;
+
+                // 计算图片的长宽比
+                const aspectRatio = originalWidth / originalHeight;
+
+                // 计算目标宽高，使图片面积接近 targetArea 且保持长宽比
+                const targetWidth = Math.sqrt(targetArea * aspectRatio);
+                const targetHeight = targetWidth / aspectRatio;
+
+                this.style.width = `${targetWidth}px`;
+                this.style.height = `${targetHeight}px`;
+                this.style.position = "absolute";
+                this.style.zIndex = 9995 + idx;
+
+                this.style.left = `${screenWidth / 4 * (idx + 1) - targetWidth / 2}px`;
+                console.log("this.style.left = " + this.style.left)
+                this.style.top = `${screenHeight / 4 * ((idx % 2) * 2 + 1) - targetHeight / 2}px`;
+            }
+            }
+        )
+
+        // for (var i = 0; i < 3; i++) {
+        //     horizontal_imgs[i].onload = function () {
+        //         const screenWidth = window.innerWidth;
+        //         const screenHeight = window.innerHeight;
+        //
+        //         // 计算目标面积 (屏幕面积的1/8)
+        //         const targetArea = (screenWidth * screenHeight) / 8;
+        //
+        //         // 图片的原始宽高
+        //         const originalWidth = this.naturalWidth;
+        //         const originalHeight = this.naturalHeight;
+        //
+        //         // 计算图片的长宽比
+        //         const aspectRatio = originalWidth / originalHeight;
+        //
+        //         // 计算目标宽高，使图片面积接近 targetArea 且保持长宽比
+        //         const targetWidth = Math.sqrt(targetArea * aspectRatio);
+        //         const targetHeight = targetWidth / aspectRatio;
+        //
+        //         this.style.width = `${targetWidth}px`;
+        //         this.style.height = `${targetHeight}px`;
+        //         this.style.position = "relative";
+        //         this.style.zIndex = 9999;
+        //
+        //         this.style.left = `${screenWidth / 4 * (i + 1) - targetWidth / 2}px`;
+        //         console.log("this.style.left = " + this.style.left)
+        //         this.style.top = `${screenHeight / 4 * (i % 2) * 2 + 1 - targetHeight / 2}px`;
+        //     }
+        // }
+    }
+
 
 }
 
@@ -603,7 +728,7 @@ async function create_nj_chart(){
 
         var onMarkerClick = function (e) {
             var marker_location_name = e.target._originOpts.location_name;
-
+            show_photos("page8", marker_location_name);
 
             // e.target 就是被点击的 Marker
         }
