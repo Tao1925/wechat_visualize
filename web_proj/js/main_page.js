@@ -166,6 +166,42 @@ async function show_photos(page_id, marker_name) {
         // }
     }
 
+    // 创建 GSAP 时间轴
+    const tl = gsap.timeline({
+        onComplete: () => {
+            // 动画完成后，移除 overlay
+            target_page.removeChild(photo_container);
+        }
+    });
+
+    // 淡入 Overlay
+    tl.to(photo_container, { duration: 0.5, opacity: 1 });
+
+    // 图片进入动画
+    tl.to(img_elements, {
+        duration: 1,
+        opacity: 1,
+        scale: 1,
+        stagger: 0.2,
+        ease: 'power3.out'
+    }, "-=0.3");
+
+    // 等待5秒
+    tl.to({}, { duration: 5 });
+
+    // 图片退出动画
+    tl.to(img_elements, {
+        duration: 1,
+        opacity: 0,
+        scale: 0.8,
+        stagger: 0.2,
+        ease: 'power3.in'
+    });
+
+    // 淡出 Overlay
+    tl.to(photo_container, { duration: 0.5, opacity: 0 }, "-=0.5");
+
+
 
 }
 
@@ -743,9 +779,6 @@ async function create_nj_chart(){
             });
             marker.on('click', onMarkerClick);
         }
-
-
-
 
     } catch (error){
         console.log(error)
