@@ -41,6 +41,7 @@ function timeToDecimal(timeStr) {
 }
 
 async function show_photos(page_id, marker_name) {
+    let i;
     var target_page = document.getElementById("container");
 
     var photo_container = document.createElement('div');
@@ -51,7 +52,7 @@ async function show_photos(page_id, marker_name) {
     target_page.appendChild(photo_container)
 
     const image_urls =  []
-    for (var i = 1; i <= 3; i++){
+    for (i = 1; i <= 3; i++){
         image_urls.push('/output/photo/nj/' + marker_name + '/' + i + '.jpg');
     }
 
@@ -89,51 +90,55 @@ async function show_photos(page_id, marker_name) {
         img_elements.push(img);
 
     })
-    console.log(img_elements)
+    console.log(img_elements);
+    console.log(img_elements[0].naturalHeight);
 
     const vertical_imgs = [];
     const horizontal_imgs = [];
 
-    for (var i = 0; i < 3; i++){
+    img_elements.forEach(img => {
+        if (img.naturalHeight > img.naturalWidth){
+            vertical_imgs.push(img);
+        }else{
+            horizontal_imgs.push(img);
+        }
+    })
+
+
+    /*
+    for (i = 0; i < 3; i++){
+        console.log("img_elements[i].naturalHeight = " + img_elements[i].naturalHeight);
+        console.log("img_elements[i].naturalWidth = " + img_elements[i].naturalWidth);
         if (img_elements[i].naturalHeight > img_elements[i].naturalWidth){
             vertical_imgs.push(img_elements[i]);
         }else{
             horizontal_imgs.push(img_elements[i]);
         }
-    }
-    console.log("horizontal_imgs.length = " + horizontal_imgs.length)
-    if (horizontal_imgs.length === 3) {
+    }*/
+    console.log("horizontal_imgs.length = " + horizontal_imgs.length);
+    console.log("vertical_imgs.length = " + vertical_imgs.length);
+    if (horizontal_imgs.length === 3 && vertical_imgs.length === 0) {
 
         horizontal_imgs.forEach((img, idx) => {
             img.onload = function () {
                 const screenWidth = window.innerWidth;
                 const screenHeight = window.innerHeight;
-
-                // 计算目标面积 (屏幕面积的1/8)
                 const targetArea = (screenWidth * screenHeight) / 8;
-
-                // 图片的原始宽高
                 const originalWidth = this.naturalWidth;
                 const originalHeight = this.naturalHeight;
-
-                // 计算图片的长宽比
                 const aspectRatio = originalWidth / originalHeight;
-
-                // 计算目标宽高，使图片面积接近 targetArea 且保持长宽比
                 const targetWidth = Math.sqrt(targetArea * aspectRatio);
                 const targetHeight = targetWidth / aspectRatio;
 
                 this.style.width = `${targetWidth}px`;
                 this.style.height = `${targetHeight}px`;
                 this.style.position = "absolute";
-                this.style.zIndex = 9995 + idx;
+                this.style.zIndex = 9999;
 
                 this.style.left = `${screenWidth / 4 * (idx + 1) - targetWidth / 2}px`;
-                console.log("this.style.left = " + this.style.left)
                 this.style.top = `${screenHeight / 4 * ((idx % 2) * 2 + 1) - targetHeight / 2}px`;
             }
-            }
-        )
+        })
 
         // for (var i = 0; i < 3; i++) {
         //     horizontal_imgs[i].onload = function () {
@@ -164,6 +169,90 @@ async function show_photos(page_id, marker_name) {
         //         this.style.top = `${screenHeight / 4 * (i % 2) * 2 + 1 - targetHeight / 2}px`;
         //     }
         // }
+    } else if (horizontal_imgs.length === 2 && vertical_imgs.length === 1) {
+        horizontal_imgs.forEach((img, idx) => {
+            img.onload = function () {
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const targetArea = (screenWidth * screenHeight) / 8;
+                const originalWidth = this.naturalWidth;
+                const originalHeight = this.naturalHeight;
+                const aspectRatio = originalWidth / originalHeight;
+                const targetWidth = Math.sqrt(targetArea * aspectRatio);
+                const targetHeight = targetWidth / aspectRatio;
+
+                this.style.width = `${targetWidth}px`;
+                this.style.height = `${targetHeight}px`;
+                this.style.position = "absolute";
+                this.style.zIndex = 9999;
+
+                this.style.left = `${screenWidth / 3 *  - targetWidth / 2}px`;
+                this.style.top = `${screenHeight / 4 * (idx * 2 + 1) - targetHeight / 2}px`;
+            }
+        });
+        vertical_imgs.forEach((img, idx) => {
+            img.onload = function () {
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const targetArea = (screenWidth * screenHeight) / 8;
+                const originalWidth = this.naturalWidth;
+                const originalHeight = this.naturalHeight;
+                const aspectRatio = originalWidth / originalHeight;
+                const targetWidth = Math.sqrt(targetArea * aspectRatio);
+                const targetHeight = targetWidth / aspectRatio;
+
+                this.style.width = `${targetWidth}px`;
+                this.style.height = `${targetHeight}px`;
+                this.style.position = "absolute";
+                this.style.zIndex = 9999;
+
+                this.style.left = `${screenWidth / 6 * 5 - targetWidth / 2}px`;
+                this.style.top = `${screenHeight / 2 - targetHeight / 2}px`;
+            }
+        })
+    }else if (horizontal_imgs.length === 1 && vertical_imgs.length === 2) {
+        horizontal_imgs.forEach((img, idx) => {
+            img.onload = function () {
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const targetArea = (screenWidth * screenHeight) / 8;
+                const originalWidth = this.naturalWidth;
+                const originalHeight = this.naturalHeight;
+                const aspectRatio = originalWidth / originalHeight;
+                const targetWidth = Math.sqrt(targetArea * aspectRatio);
+                const targetHeight = targetWidth / aspectRatio;
+
+                this.style.width = `${targetWidth}px`;
+                this.style.height = `${targetHeight}px`;
+                this.style.position = "absolute";
+                this.style.zIndex = 9999;
+
+                this.style.left = `${screenWidth / 3 *  - targetWidth / 2}px`;
+                this.style.top = `${screenHeight / 4 * (idx * 2 + 1) - targetHeight / 2}px`;
+            }
+        });
+        vertical_imgs.forEach((img, idx) => {
+            img.onload = function () {
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const targetArea = (screenWidth * screenHeight) / 8;
+                const originalWidth = this.naturalWidth;
+                const originalHeight = this.naturalHeight;
+                const aspectRatio = originalWidth / originalHeight;
+                const targetWidth = Math.sqrt(targetArea * aspectRatio);
+                const targetHeight = targetWidth / aspectRatio;
+
+                this.style.width = `${targetWidth}px`;
+                this.style.height = `${targetHeight}px`;
+                this.style.position = "absolute";
+                this.style.zIndex = 9999;
+
+                this.style.left = `${screenWidth / 6 * 5 - targetWidth / 2}px`;
+                this.style.top = `${screenHeight / 2 - targetHeight / 2}px`;
+            }
+        })
+    }else if (horizontal_imgs.length === 0 && vertical_imgs.length === 3) {
+
     }
 
     // 创建 GSAP 时间轴
