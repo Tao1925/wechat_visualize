@@ -1,4 +1,6 @@
 import csv
+import os
+from PIL import Image
 # import jieba
 from collections import Counter
 
@@ -87,6 +89,41 @@ def count_word_frequency(reader):
         if len(word) != 3 and word[0] == word[1]: continue
         f.write(f"{word} {count}\n")
 
+def check_img_ori(img_path):
+    with Image.open(img_path) as img:
+        width, height = img.size
+
+    # 判断高度和宽度的关系
+    if height > width:
+        return 'vertical'  # 高度大于宽度，竖向
+    else:
+        return 'horizontal'  # 宽度大于或等于高度，横向
+def gen_photos_info():
+    photo_folder_path = "../../output/photo/nj"
+    folders = []
+
+    for f in os.listdir(photo_folder_path):
+        if os.path.isdir(os.path.join(photo_folder_path, f)):
+            folders.append(f)
+    for folder in folders:
+        info_string = ""
+        location_path = os.path.join(photo_folder_path, folder)
+        info_path = os.path.join(location_path, "info.txt")
+        if os.path.exists(info_path):
+            os.remove(info_path)
+        imgs = os.listdir(location_path)
+        info_string += str(len(imgs)) + '\n'
+        for img in imgs:
+            img_path = os.path.join(location_path, img)
+            info_string += img + ' '
+            info_string += check_img_ori(img_path) + '\n'
+        info_path = os.path.join(location_path, "info.txt")
+        with open(info_path, mode='w', encoding='utf-8') as f:
+            f.write(info_string)
+            f.close()
+
+
+
 
 def read_csv():
     f = open("../../data/chat.csv", mode='r', encoding='utf-8')
@@ -94,8 +131,10 @@ def read_csv():
 
     # count_chat_monthly(reader)
     # count_chat_daily(reader)
-    count_chat_hourly(reader)
+    # count_chat_hourly(reader)
     # count_word_frequency(reader)
+    gen_photos_info()
+
 
 
 if __name__ == '__main__':
