@@ -54,8 +54,11 @@ function getFileNameFromURL(url) {
 
 async function show_photos(page_id, marker_name) {
     try {
-        const info_path = "/output/photo/nj/" + marker_name + '/' + "info.txt";
-        const response = await fetch(info_path);
+
+        var folder_path;
+        if (page_id === "page7") folder_path = "/output/photo/china/" + marker_name;
+        else if (page_id === "page8") folder_path = "/output/photo/nj/" + marker_name;
+        const response = await fetch(folder_path + '/' + "info.txt");
         const content = await response.text();
         const lines = content.split('\n');
 
@@ -80,17 +83,20 @@ async function show_photos(page_id, marker_name) {
         })
 
         let i;
-        var target_page = document.getElementById("container");
+        var element_id;
+        if (page_id === "page7") element_id = "china_chart";
+        else if (page_id === "page8") element_id = "container";
+        var target_page = document.getElementById(element_id);
 
         var photo_container = document.createElement('div');
         photo_container.id = "photo_container";
-        photo_container.style.position = "relative";
+        photo_container.style.position = "static";
         photo_container.style.width = "100%";
         photo_container.style.height = "100%";
         target_page.appendChild(photo_container)
 
         for (i = 0; i < 3; i++) {
-            image_urls.push('/output/photo/nj/' + marker_name + '/' + img_info[i].url);
+            image_urls.push(folder_path +  '/' + img_info[i].url);
         }
 
         const img_elements = [];
@@ -284,7 +290,6 @@ async function show_photos(page_id, marker_name) {
                 }
             })
         }
-
         // 创建 GSAP 时间轴
         const tl = gsap.timeline({
             onComplete: () => {
@@ -755,7 +760,7 @@ async function create_hour_chart(){
 async function create_china_chart(){
     var chart = echarts.init(document.getElementById("china_chart"));
 
-    $.getJSON("/output/china_province.json", function (data) {
+    $.getJSON("/output/china_full.json", function (data) {
         // 注册地图
         echarts.registerMap("china", data);
         // 配置option
@@ -814,9 +819,10 @@ async function create_china_chart(){
                     geoIndex: 0,
                     roam: true,
                     data: [
-                        { name: "北京市", value:5 },  // 北京省份设置为红色
-                        { name: "上海市", value:15 },  // 上海省份设置为绿色
-                        { name: "广东省", value:25 },  // 广东省份设置为蓝色
+                        { name: "苏州市", value:5 },  // 北京省份设置为红色
+                        { name: "湖州市", value:15 },  // 上海省份设置为绿色
+                        { name: "成都市", value:25 }, // 广东省份设置为蓝色
+                        { name: "大连市", value:35 }
                         // 其他省份使用默认颜色（如果不设置）
                     ]
                 },
@@ -828,16 +834,28 @@ async function create_china_chart(){
                         color: "#fa3534",
                     },
                     data: [
-                        { name: "北京", value: [116.4074, 39.9042] },
-                        { name: "上海", value: [121.4737, 31.2304] },
-                        { name: "广州", value: [113.2644, 23.1292] },
-                        // 更多数据...
+                        // { name: "北京", value: [116.4074, 39.9042] },
+                        // { name: "上海", value: [121.4737, 31.2304] },
+                        // { name: "广州", value: [113.2644, 23.1292] },
+                        // // 更多数据...
                     ],
                 },
             ],
         };
         chart.setOption(option, true);
     });
+
+    chart.on('click', function(params) {
+        console.log(params);
+        if (params.componentType === 'series') {
+            // 获取点击的省份名称
+            var provinceName = params.name;
+
+            // 执行你的函数
+            // console.log('点击了省份:', provinceName);
+            show_photos("page7", provinceName)
+        }
+    })
 }
 
 async function create_nj_chart(){
