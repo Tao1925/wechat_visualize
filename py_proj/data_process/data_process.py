@@ -98,8 +98,8 @@ def check_img_ori(img_path):
         return 'vertical'  # 高度大于宽度，竖向
     else:
         return 'horizontal'  # 宽度大于或等于高度，横向
-def gen_photos_info():
-    photo_folder_path = "../../output/photo/nj"
+def gen_photos_info(photo_folder_path):
+    # photo_folder_path = "../../output/photo/nj"
     folders = []
 
     for f in os.listdir(photo_folder_path):
@@ -133,7 +133,8 @@ def read_csv():
     # count_chat_daily(reader)
     # count_chat_hourly(reader)
     # count_word_frequency(reader)
-    gen_photos_info()
+    gen_photos_info("../../output/photo/nj")
+    gen_photos_info("../../output/photo/china")
 
 
 

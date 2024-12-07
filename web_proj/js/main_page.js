@@ -32,7 +32,7 @@ function loadContent(targetId, file) {
                 create_movie_page();
             }
             if (targetId === "page10"){
-                create_time_page();
+                // create_time_page();
             }
         })
         .catch(err => console.error(err));
@@ -44,6 +44,23 @@ function timeToDecimal(timeStr) {
 
     // 将分钟转换为小时，并返回总的小时数
     return hours + minutes / 60;
+}
+
+
+function getRandomThreeNumbers(n) {
+    if (n < 3) {
+        throw new Error("n 必须大于等于 3");
+    }
+
+    const result = new Set();
+
+    // 不断添加随机数直到集合中有 3 个不同的数字
+    while (result.size < 3) {
+        const randomNum = Math.floor(Math.random() * n);
+        result.add(randomNum);
+    }
+
+    return Array.from(result);
 }
 
 
@@ -75,8 +92,11 @@ async function show_photos(page_id, marker_name) {
         const image_urls = []
         lines.forEach(line => {
             const words = line.split(' ');
-            if (words.length === 1){
-                total_cnt = parseInt(words[0]);
+            console.log(words);
+            console.log("words.length = " + words.length);
+            if (words.length === 1 && words[0].length >= 1) {
+                total_cnt = parseInt(words[0].trim());
+                console.log("words[0].trim() = " + words[0].trim());
             }else if (words.length === 2){
                 var url = words[0].trim();
                 var ori = words[1].trim();
@@ -87,6 +107,10 @@ async function show_photos(page_id, marker_name) {
                 img_ori_hashmap[url] = ori;
             }
         })
+
+        console.log(img_info);
+        console.log(img_ori_hashmap);
+
 
         let i;
         var element_id;
@@ -101,9 +125,18 @@ async function show_photos(page_id, marker_name) {
         photo_container.style.height = "100%";
         target_page.appendChild(photo_container)
 
+        console.log(total_cnt);
+
+        const random_three_numbers = getRandomThreeNumbers(total_cnt);
+        console.log("random_three_numbers = " + random_three_numbers);
+
         for (i = 0; i < 3; i++) {
-            image_urls.push(folder_path +  '/' + img_info[i].url);
+            const random_index = random_three_numbers[i];
+            console.log("random_index = " + random_index);
+            image_urls.push(folder_path +  '/' + img_info[random_index].url);
         }
+        console.log(img_info);
+        console.log(image_urls);
 
         const img_elements = [];
 
@@ -157,16 +190,17 @@ async function show_photos(page_id, marker_name) {
         console.log(img_ori_hashmap);
         console.log("vertical_imgs = " + vertical_imgs);
         console.log("horizontal_imgs = " + horizontal_imgs);
-        /*
-        for (i = 0; i < 3; i++){
-            console.log("img_elements[i].naturalHeight = " + img_elements[i].naturalHeight);
-            console.log("img_elements[i].naturalWidth = " + img_elements[i].naturalWidth);
-            if (img_elements[i].naturalHeight > img_elements[i].naturalWidth){
-                vertical_imgs.push(img_elements[i]);
-            }else{
-                horizontal_imgs.push(img_elements[i]);
-            }
-        }*/
+
+        // for (i = 0; i < 3; i++){
+        //     console.log("img_elements[i].naturalHeight = " + img_elements[i].naturalHeight);
+        //     console.log("img_elements[i].naturalWidth = " + img_elements[i].naturalWidth);
+        //     if (img_elements[i].naturalHeight > img_elements[i].naturalWidth){
+        //         vertical_imgs.push(img_elements[i]);
+        //     }else{
+        //         horizontal_imgs.push(img_elements[i]);
+        //     }
+        // }
+
         console.log("horizontal_imgs.length = " + horizontal_imgs.length);
         console.log("vertical_imgs.length = " + vertical_imgs.length);
         if (horizontal_imgs.length === 3 && vertical_imgs.length === 0) {
@@ -330,6 +364,7 @@ async function show_photos(page_id, marker_name) {
 
         // 淡出 Overlay
         tl.to(photo_container, {duration: 0.5, opacity: 0}, "-=0.5");
+
     }catch (error){
         console.error('读取文件失败:', error);
     }
@@ -341,7 +376,7 @@ async function show_photos(page_id, marker_name) {
 
 // 加载内容
 document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 9; i++) {
         loadContent('page' + i, 'html/page' + i + '.html');
     }
 });
