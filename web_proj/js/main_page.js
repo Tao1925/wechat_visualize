@@ -28,6 +28,12 @@ function loadContent(targetId, file) {
             if (targetId === "page8"){
                 create_nj_chart();
             }
+            if (targetId === "page9"){
+                create_movie_page();
+            }
+            if (targetId === "page10"){
+                create_time_page();
+            }
         })
         .catch(err => console.error(err));
 }
@@ -335,7 +341,7 @@ async function show_photos(page_id, marker_name) {
 
 // 加载内容
 document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 1; i <= 9; i++) {
+    for (let i = 1; i <= 12; i++) {
         loadContent('page' + i, 'html/page' + i + '.html');
     }
 });
@@ -922,4 +928,72 @@ async function create_nj_chart(){
     } catch (error){
         console.log(error)
     }
+}
+
+function getFormattedTime() {
+    const now = new Date();
+    let hours = now.getHours().toString().padStart(2, '0');
+    let minutes = now.getMinutes().toString().padStart(2, '0');
+    let seconds = now.getSeconds().toString().padStart(2, '0');
+    return { hours, minutes, seconds };
+}
+
+
+function create_movie_page() {
+
+}
+
+function updateTime(){
+    const { hours, minutes, seconds } = getFormattedTime();
+
+    // 更新小时、分钟和秒钟的文本
+    const hourElement = document.getElementById('hours');
+    const minuteElement = document.getElementById('minutes');
+    const secondElement = document.getElementById('seconds');
+
+    // 使用 GSAP 为每个部分添加动画效果
+    gsap.fromTo(hourElement, {
+        opacity: 0, // 初始状态透明
+        scale: 0.5  // 初始状态缩小
+    }, {
+        opacity: 1, // 变为完全不透明
+        scale: 1,   // 还原为原始大小
+        duration: 0.6, // 动画持续时间
+        ease: "back.out(1.7)", // 缓动效果
+    });
+
+    gsap.fromTo(minuteElement, {
+        opacity: 0,
+        scale: 0.5
+    }, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: "back.out(1.7)",
+    });
+
+    gsap.fromTo(secondElement, {
+        opacity: 0,
+        scale: 0.5
+    }, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: "back.out(1.7)",
+    });
+
+    // 更新 DOM 中的时间显示
+    hourElement.textContent = hours;
+    minuteElement.textContent = minutes;
+    secondElement.textContent = seconds;
+
+}
+
+function create_time_page(){
+
+    // 每秒更新一次时间
+    setInterval(updateTime, 1000);
+
+    // 初次运行时立即更新一次时间
+    updateTime();
 }

@@ -103,3 +103,16 @@ html {
     height: 34px;
     /*text-align: left;*/
 }
+
+.clock {
+    font-size: 5rem;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.digit {
+    display: inline-block;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
