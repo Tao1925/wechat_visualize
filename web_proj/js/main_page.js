@@ -7,6 +7,12 @@ function loadContent(targetId, file) {
         })
         .then(data => {
             document.getElementById(targetId).innerHTML = data;
+            if (targetId === "page0"){
+                set_page0_animation();
+            }
+            if (targetId === "page1"){
+                set_page1_animation();
+            }
             if (targetId === "page2"){
                 create_month_chart();
             }
@@ -373,13 +379,144 @@ async function show_photos(page_id, marker_name) {
 }
 
 
-
 // 加载内容
 document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 1; i <= 9; i++) {
+    for (let i = 0; i <= 9; i++) {
         loadContent('page' + i, 'html/page' + i + '.html');
     }
 });
+
+function set_page0_animation(){
+
+    // const obj = document.getElementById('type');
+
+    const obj = {
+        output: '',
+        type: 'normal',
+        isEnd: false,
+        speed: 60,
+        backSpeed: 40,
+        sleep: 3000,
+        singleBack: false,
+        sentencePause: false
+    }
+
+
+    const typing = new EasyTyper(obj, `黎明前的黑暗是最深不见底的黑暗！`,
+        instance => {
+            // 回调函数
+            // 此回调一般用于获取新的数据然后循环输出
+            // instance { 实例EasyTyper }
+            console.log(instance) // 打印出实例对象
+        }, (output, instance)=>{
+            // 钩子函数
+            // output { 当前帧的输出内容 }
+            // instance { 实例EasyTyper }
+            // 通过钩子函数动态更新dom元素
+            document.getElementById('type').innerHTML = `${output}`
+        })
+
+
+}
+
+
+function set_page1_animation(){
+    gsap.registerPlugin(ScrollTrigger);
+
+    const spans = document.querySelectorAll("#basic_info .animated_num");
+
+    const targetValues = []
+    spans.forEach(span => {
+        targetValues.push(parseInt(span.textContent));
+        const span_width = span.textContent.length;
+        span.style.width = '5' + 'ch';
+        span.textContent = "";
+
+    })
+
+    console.log(spans);
+    spans.forEach((span, index) => {
+        // 获取 span 元素中的目标数字
+        const targetValue = parseInt(span.textContent);
+        // 每个 span 的动画，延迟逐个触发
+        gsap.to(span, {
+            scrollTrigger: {
+                trigger: "#page1", // 触发动画的元素
+                start: "top center", // 当 div1 顶部到达视窗中心时开始
+                end: "bottom center", // 当 div1 底部到达视窗中心时结束
+                scrub: false, // 不与滚动进度同步
+                once: true,  // 确保动画只触发一次
+                onEnter: function (){
+                    console.log(span);
+                    console.log(index);
+                    gsap.to(span, {
+                        innerText: targetValues[index], // 动画到达目标值
+                        duration: 5, // 动画时长
+                        snap: {innerText: 1}, // 确保数值为整数
+                        ease: "expo.inOut", // 缓动函数
+                        delay: index, // 每个动画延迟 1 秒
+                        onUpdate: function () {
+                            const target = this.targets()[0];
+                            target.textContent = Math.round(target.innerText);
+                        }
+                    })
+
+                }
+            }
+        });
+    });
+    /*
+    gsap.to(spans[0], {
+        scrollTrigger: {
+            trigger: "#page1", // 触发动画的元素
+            start: "top center", // 当 div2 顶部到达视窗中心时开始
+            end: "bottom center", // 当 div2 底部到达视窗中心时结束
+            scrub: false, // 不与滚动进度同步
+            once: true,  // 确保动画只触发一次
+            onEnter: function() {
+                // 触发数值动画从 0 到 10000
+                gsap.to(spans[0], {
+                    innerText: 10000,
+                    duration: 3, // 动画时长
+                    snap: { innerText: 1 }, // 确保数值为整数
+                    ease: "expo.inOut", // 先快后慢
+                    delay: 5,
+                    onUpdate: function(self) {
+                        // 动画中实时更新数字
+                        const target = this.targets()[0];
+                        target.textContent = Math.round(target.innerText);
+                    }
+                });
+            }
+        }
+    });
+
+    gsap.to(spans[1], {
+        scrollTrigger: {
+            trigger: "#page1", // 触发动画的元素
+            start: "top center", // 当 div2 顶部到达视窗中心时开始
+            end: "bottom center", // 当 div2 底部到达视窗中心时结束
+            scrub: false, // 不与滚动进度同步
+            once: true,  // 确保动画只触发一次
+            onEnter: function() {
+                // 触发数值动画从 0 到 10000
+                gsap.to(spans[1], {
+                    innerText: 10000,
+                    duration: 3, // 动画时长
+                    snap: { innerText: 1 }, // 确保数值为整数
+                    ease: "expo.inOut", // 先快后慢
+                    onUpdate: function(self) {
+                        // 动画中实时更新数字
+                        const target = this.targets()[0];
+                        target.textContent = Math.round(target.innerText);
+                    }
+                });
+            }
+        }
+    });
+
+     */
+}
 
 function create_month_chart() {
     // var ctx = document.getElementById('lineChart').getContext('2d');

@@ -116,3 +116,31 @@ html {
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.5);
 }
+#basic_info{
+    font-size: 3rem;
+    text-align: left;
+}
+#animatedNumber, .animated_num{
+    font-family: "Courier New", monospace; /* 使用等宽字体 */
+    font-size: 3rem;
+    font-weight: bold;
+    /*width: 10ch; !* 预留5位数字的宽度（10ch 是 5 位数字的宽度） *!*/
+    text-align: right;
+    white-space: nowrap; /* 防止换行 */
+}
+span{
+    display: inline-block;
+}
+#type{
+
+    border: 2px solid #000; /* 边框颜色和宽度 */
+    border-radius: 20px; /* 圆角半径 */
+    padding: 5px;
+
+    position: absolute;
+    left: 40vw;
+    width: 20vw;
+    font-size: 2rem;
+    text-align: left;
+    top: 30vh;
+}
