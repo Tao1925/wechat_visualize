@@ -3,6 +3,12 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/MemoTrace" />
+      <excludeFolder url="file://$MODULE_DIR$/data" />
+      <excludeFolder url="file://$MODULE_DIR$/output/photo/china/扬州市" />
+      <excludeFolder url="file://$MODULE_DIR$/output/photo/nj/南京眼" />
+      <excludeFolder url="file://$MODULE_DIR$/output/photo/nj/明孝陵" />
+      <excludeFolder url="file://$MODULE_DIR$/output/photo/nj/欢乐谷" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
