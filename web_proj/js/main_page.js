@@ -500,10 +500,16 @@ async function gen_chat(){
 
 }
 
+async function show_heart(){
+    const heart_container = document.getElementById('heart_container');
 
-function set_page0_animation(){
+}
 
-    gen_chat()
+
+async function set_page0_animation(){
+
+    await gen_chat();
+    await show_heart();
 
 
 }

@@ -161,7 +161,7 @@ span{
     width: 60vw;
     left: 20vw;
     top: 20vh;
-    height: 80vh;
+    height: 60vh;
     display: flex;
     flex-direction: column;
 }
@@ -173,13 +173,73 @@ span{
     direction: rtl;
 }
 #up_arrow{
-    position: absolute;
+    position: fixed;
     z-index: 20000;
     top: 0;
     right: 0;
     transform: scale(0.1);
     transform-origin: top right;
+    opacity: 0.5;
 }
 #down_arrow{
+    position: fixed;
+    z-index: 20000;
+    bottom: 0;
+    right: 0;
+    transform: scale(0.1);
+    transform-origin: bottom right;
+    opacity: 0.5;
+}
+#heart_container{
+    position: absolute;
+    width: 20vw;
+    left: 40vw;
+    height: 20vh;
+    top: 80vh;
+}
 
+.heart {
+    position: absolute;
+    margin: auto;
+    top: 75vh;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: pink;
+    height: 10vh;
+    width: 10vh;
+    transform: rotate(-45deg);
+    animation-name: beat;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+}
+.heart:after {
+    background-color: pink;
+    content: "";
+    border-radius: 50%;
+    position: absolute;
+    width: 10vh;
+    height: 10vh;
+    top: 0;
+    left: 5vh;
+}
+.heart:before {
+    background-color: pink;
+    content: "";
+    border-radius: 50%;
+    position: absolute;
+    width: 10vh;
+    height: 10vh;
+    top: -5vh;
+    left: 0;
+}
+
+
+@keyframes beat {
+    0% {
+        transform: scale(1) rotate(-45deg);
+    }
+    50% {
+        transform: scale(0.6) rotate(-45deg);
+    }
 }
