@@ -131,16 +131,55 @@ html {
 span{
     display: inline-block;
 }
-#type{
+.typing{
 
     border: 2px solid #000; /* 边框颜色和宽度 */
     border-radius: 20px; /* 圆角半径 */
     padding: 5px;
-
-    position: absolute;
-    left: 40vw;
-    width: 20vw;
+    margin: 5px;
+    /*width: 20vw;*/
+    max-width: 30vw;
     font-size: 2rem;
     text-align: left;
-    top: 30vh;
+}
+.circle_container {
+    width: 10vh; /* 容器的宽度 */
+    height: 10vh; /* 容器的高度，设置为正方形 */
+    border-radius: 50%; /* 将容器裁剪为圆形 */
+    overflow: hidden; /* 隐藏超出圆形容器的部分 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle_container img {
+    width: 100%; /* 图片自适应容器宽度 */
+    height: auto; /* 保持图片比例 */
+}
+#chat_container{
+    position: absolute;
+    width: 60vw;
+    left: 20vw;
+    top: 20vh;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+#chat_container div{
+    display: flex;
+}
+.single_chat{
+    /*flex-direction: row;*/
+    direction: rtl;
+}
+#up_arrow{
+    position: absolute;
+    z-index: 20000;
+    top: 0;
+    right: 0;
+    transform: scale(0.1);
+    transform-origin: top right;
+}
+#down_arrow{
+
 }

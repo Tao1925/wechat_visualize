@@ -386,9 +386,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function set_page0_animation(){
 
-    // const obj = document.getElementById('type');
+function gen_single_chat(direction, user, content){
+    var chat_container = document.getElementById('chat_container');
+    const chats = chat_container.querySelectorAll('.single_chat');
+    var chats_num = chats.length;
+
+    const single_chat = document.createElement('div');
+    single_chat.classList.add('single_chat');
+
+    if (direction === 'left') {
+        single_chat.style.direction = 'ltr';
+    }else if (direction === 'right') {
+        single_chat.style.direction = 'rtl';
+    }
+
+    const circle_container = document.createElement('div');
+    circle_container.classList.add('circle_container');
+
+    const logo_img = document.createElement('img');
+    if (user === 'sxy'){
+        logo_img.src = '/web_proj/res/sxy_logo.jpg';
+    }else if (user === 'tsy'){
+        logo_img.src = '/web_proj/res/tsy_logo.jpg';
+    }
+    circle_container.appendChild(logo_img);
+
+    const typing = document.createElement('div');
+    typing.classList.add('typing');
+    typing.id = 'typing' + (chats_num + 1);
 
     const obj = {
         output: '',
@@ -402,7 +428,7 @@ function set_page0_animation(){
     }
 
 
-    const typing = new EasyTyper(obj, `黎明前的黑暗是最深不见底的黑暗！`,
+    const easyTyper = new EasyTyper(obj, content,
         instance => {
             // 回调函数
             // 此回调一般用于获取新的数据然后循环输出
@@ -413,8 +439,71 @@ function set_page0_animation(){
             // output { 当前帧的输出内容 }
             // instance { 实例EasyTyper }
             // 通过钩子函数动态更新dom元素
-            document.getElementById('type').innerHTML = `${output}`
+            typing.innerHTML = `${output}`
         })
+
+
+    single_chat.appendChild(circle_container);
+    single_chat.appendChild(typing);
+
+    chat_container.appendChild(single_chat);
+
+
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+function clear_chat_container() {
+    var chat_container = document.getElementById('chat_container');
+    const chats = chat_container.querySelectorAll('.single_chat');
+    chats.forEach(chat => {
+        chat.remove();
+    })
+}
+
+function scrollDown() {
+    // gsap.registerPlugin(ScrollTrigger);
+    // // 滚动目标：100vh
+    // var target = window.innerHeight;
+    //
+    // // 使用 GSAP 动画库进行滚动
+    // gsap.to(window, {
+    //     duration: 2, // 动画时长
+    //     scrollTo: target, // 滚动目标（100vh）
+    //     ease: "power2.inOut" // ease-in-out 曲线
+    // });
+
+    var current_height = window.scrollY;
+    var target_height = current_height + window.innerHeight;
+
+    window.scrollTo(0,target_height);
+}
+
+
+
+async function gen_chat(){
+
+    gen_single_chat('left', 'tsy', '1234567890');
+    await delay(2000);
+    gen_single_chat('right', 'sxy', '44556677');
+    await delay(2000);
+    // gen_single_chat('left', 'sxy', '098765432');
+    // await delay(2000);
+    // clear_chat_container();
+    // await delay(3000);
+    // scrollDown();
+    // await delay(3000);
+    // scrollDown();
+
+}
+
+
+function set_page0_animation(){
+
+    gen_chat()
 
 
 }
